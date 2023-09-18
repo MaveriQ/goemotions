@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Lightning",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["fit",
+                     "--config",
+                    "config.yaml"]           
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",

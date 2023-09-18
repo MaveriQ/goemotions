@@ -1,0 +1,5 @@
+for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.load_in_8bit True --model.load_in_4bit False --model.model_name_or_path meta-llama/Llama-2-7b-hf --data.batch_size 8 --trainer.logger.init_args.version llama7b_epoch3_bs8_lr$lr; done
+for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.load_in_8bit True --model.load_in_4bit False --model.model_name_or_path meta-llama/Llama-2-7b-hf --data.batch_size 8 --trainer.logger.init_args.version llama7b_epoch3_bs8_lr$lr; done
+for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 8 --trainer.logger.init_args.version llama13b_epoch3_bs8_lr$lr; done
+for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 4 --trainer.logger.init_args.version llama13b_epoch3_bs4_lr$lr; done
+

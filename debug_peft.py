@@ -3,6 +3,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 from peft import AutoPeftModelForCausalLM
+import copy
 
 model_name = 'gpt2'
 
@@ -24,7 +25,8 @@ loader = DataLoader(dataset,collate_fn=collator,batch_size=4)
 
 # Setup Model
 base_model = AutoModelForCausalLM.from_pretrained(model_name)
-
+orig_model = copy.deepcopy(base_model
+                           )
 peft_config = LoraConfig(
                 r=64,
                 lora_alpha=16,
@@ -39,5 +41,7 @@ print(model.print_trainable_parameters())
 batch = next(iter(loader))
 peft_output = model(**batch)
 base_output = base_model(**batch)
+orig_output = orig_model(**batch)
 print(peft_output.loss)
 print(base_output.loss)
+print(orig_output.loss)

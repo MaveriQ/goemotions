@@ -39,7 +39,9 @@ class DataCollator:
         
     def __call__(self,batch):
         
-        batch = {k:[example[k] for example in batch] for k in batch[0].keys()}
+        if isinstance(batch,list):
+            batch = {k:[example[k] for example in batch] for k in batch[0].keys()}
+            
         for k,v in batch.items():
             batch[k]=self.collate(v)
             
