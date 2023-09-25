@@ -1,0 +1,8 @@
+ray
+torch>2.0
+transformers
+accelerate
+datasets
+tokenizers
+openai
+lightning

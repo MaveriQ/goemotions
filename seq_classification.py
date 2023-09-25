@@ -47,12 +47,6 @@ def main():
     encoded_dataset = dataset.map(preprocess_data,remove_columns=dataset['train'].column_names)
     encoded_dataset.set_format('pt')
 
-    # model = AutoModelForSequenceClassification.from_pretrained(args.model_name, 
-    #                                                             problem_type="multi_label_classification", 
-    #                                                             num_labels=len(subset_emotions),
-    #                                                             id2label=id2label,
-    #                                                             label2id=label2id)
-
     def model_init():
         model = AutoModelForSequenceClassification.from_pretrained(args.model_name, 
                                                                 problem_type="multi_label_classification", 

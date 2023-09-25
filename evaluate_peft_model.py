@@ -16,10 +16,10 @@ flatten = lambda sublist : [itm for lst in sublist for itm in lst]
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument('--peft_model_id')
-    parser.add_argument('--eval_base_model',default=None)
-    parser.add_argument('--max_length',type=int,default=60)
-    parser.add_argument('--max_new_tokens',type=int,default=10)
+    parser.add_argument('--peft_model_id') # The adapters saved from convert_checkpoints.py
+    parser.add_argument('--eval_base_model',default=None) # If we want to evaluate Llama2 pretrained models without any finetuning
+    parser.add_argument('--max_length',type=int,default=60) # max length for tokenizer. The value 60 was empirically found 
+    parser.add_argument('--max_new_tokens',type=int,default=10) # we want to generate only one or two class labels. 
     parser.add_argument('--batch_size',type=int,default=16)
     parser.add_argument('--load_in_8bit',type=bool,default=False)
     parser.add_argument('--load_in_4bit',type=bool,default=True)
@@ -31,9 +31,6 @@ def parse_args():
 
 def get_model_tokenizer(args):
     
-    # readme = Path(args.model_loc/'README.md').read_text().split('\n')
-    # load_in_8bit = eval(readme[8].split(': ')[1]) if args.load_in_8bit is None else args.load_in_8bit
-    # load_in_4bit = eval(readme[9].split(': ')[1]) if args.load_in_4bit is None else args.load_in_4bit
     quantization_config = BitsAndBytesConfig(
                     load_in_8bit=args.load_in_8bit,
                     load_in_4bit=args.load_in_4bit,
@@ -78,15 +75,18 @@ def main():
         output_file = adapter_dir/f'predictions_{args.peft_model_id}.pkl'
 
     assert not os.path.exists(output_file), f"{output_file} already exists"
+
+    # prepare tokenizer and template with default values
     tokenize = partial(tokenizer,max_length=args.max_length,padding='max_length',truncation=False)
+    template = partial(template1,eval=True)
 
     # Prepare Dataset
     dataset = load_from_disk('goemotion_subset')
     dataset = dataset['validation']
-    template = partial(template1,eval=True)
-    prompted = dataset.map(template,remove_columns=dataset.column_names)
-
+    
+    prompted = dataset.map(template,remove_columns=dataset.column_names) # convert to prompts using template
     tokenized = prompted.map(lambda e: tokenize(e['prompt']),remove_columns=['prompt'])
+
     tokenized.set_format('pt')
 
     loader = DataLoader(tokenized,batch_size=args.batch_size)
