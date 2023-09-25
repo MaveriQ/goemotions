@@ -36,8 +36,8 @@ class GoEmotionsDataModule(LightningDataModule):
     }
 
     def __init__(self,
-                 model_name_or_path,
-                 batch_size,
+                 model_name_or_path="meta-llama/Llama-2-7b-hf",
+                 batch_size=4,
                 ):
         super().__init__()
 
@@ -96,7 +96,7 @@ class GoEmotionsDataModule(LightningDataModule):
 class GoEmotionsLightningModule(LightningModule):
 
     def __init__(self,
-                 model_name_or_path = "meta-llama/Llama-2-7b-hf",
+                 model_name_or_path = "meta-llama/Llama-2-13b-hf",
                  load_in_8bit = True,
                  load_in_4bit = False,
                  use_peft = True,
@@ -118,12 +118,11 @@ class GoEmotionsLightningModule(LightningModule):
                 load_in_8bit=self.hparams.load_in_8bit,
                 load_in_4bit=self.hparams.load_in_4bit,
                 bnb_4bit_compute_dtype=torch.float16,
-                # bnb_8bit_compute_dtype=torch.float16
-
+                bnb_8bit_compute_dtype=torch.float16
             )
             # Copy the model to each device
             device_map = {"": Accelerator().local_process_index}
-            torch_dtype = torch.bfloat16
+            torch_dtype = torch.float16
         else:
             device_map = None
             quantization_config = None

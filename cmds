@@ -3,3 +3,7 @@ for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr
 for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 8 --trainer.logger.init_args.version llama13b_epoch3_bs8_lr$lr; done
 for lr in 1e-5 5e-5 1e-4; do python lit_sft.py fit -c config.yaml --model.lr $lr --trainer.max_epochs 3 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 4 --trainer.logger.init_args.version llama13b_epoch3_bs4_lr$lr; done
 
+python lit_sft.py fit -c config.yaml --model.lr 5e-5 --trainer.max_epochs 10 --model.model_name_or_path meta-llama/Llama-2-13b-hf --trainer.accumulate_grad_batches 4 --data.batch_size 16 --trainer.logger.init_args.version llama13b_epoch10_bs64_lr5e-5
+python lit_sft.py fit -c config.yaml --model.lr 1e-4 --trainer.max_epochs 5 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 4 --trainer.logger.init_args.version llama13b_epoch5_bs4_lr1e-4
+python lit_sft.py fit -c config.yaml --model.lr 5e-5 --trainer.max_epochs 5 --model.model_name_or_path meta-llama/Llama-2-13b-hf --data.batch_size 16 --trainer.logger.init_args.version llama13b_epoch5_bs16_lr5e-5
+
